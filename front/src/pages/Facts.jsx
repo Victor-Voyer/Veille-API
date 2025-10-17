@@ -1,6 +1,6 @@
 import React from 'react'
-import { useApi } from '../hooks/useApi'
-import { Link } from 'react-router-dom'
+import { useApi } from '../hooks'
+import FactCard from '../components/FactCard'
 
 const API_URL = 'http://localhost:8000/api/facts?_format=json'
 
@@ -22,12 +22,9 @@ const Facts = () => {
 
     return (
         <div>
+            <p>Nombre de facts: {facts.length}</p>
             {facts.map((fact, index) => (
-                <div key={fact.id ?? index}>
-                    <div>{fact.fact}</div>
-                    {fact.techno && <small>Tech: {fact.techno}</small>}
-                    <Link to={`/facts/${fact.id}`}>Voir</Link>
-                </div>
+                <FactCard key={fact.id ?? index} fact={fact} />
             ))}
         </div>
     )
