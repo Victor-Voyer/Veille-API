@@ -4,11 +4,14 @@ import './App.css'
 import Facts from './pages/Facts'
 
 function App() {
-  const [count, setCount] = useState(0)
+
 
   return (
     <>
-      
+        <Routes>
+          <Route path="/" element={<Facts />} />
+        </Routes>
+
     </>
   )
 }
