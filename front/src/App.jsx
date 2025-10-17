@@ -3,6 +3,7 @@ import Facts from './pages/Facts'
 import Fact from './pages/Fact'
 import FactEdit from './pages/FactEdit'
 import Nav from './components/Nav'
+import FactNew from './pages/FactNew'
 import './App.css'
 import { Routes, Route } from 'react-router-dom'
 
@@ -13,6 +14,7 @@ const App = () => {
             <main className="main-content">
                 <Routes>
                     <Route path="/" element={<Facts />} />
+                    <Route path="/facts/new" element={<FactNew />} />
                     <Route path="/facts/:id" element={<Fact />} />
                     <Route path="/facts/:id/edit" element={<FactEdit />} />
                 </Routes>

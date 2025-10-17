@@ -24,6 +24,12 @@ const Nav = () => {
                         >
                             Accueil
                         </Link>
+                        <Link 
+                            to="/facts/new" 
+                            className={`nav-link ${isActive('/facts/new') ? 'active' : ''}`}
+                        >
+                            Créer un fact
+                        </Link>
                     </div>
                 </div>
             </div>
