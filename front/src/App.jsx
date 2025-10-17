@@ -1,19 +1,18 @@
-import { useState } from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import './App.css'
+import React from 'react'
 import Facts from './pages/Facts'
+import Fact from './pages/Fact'
+import './App.css'
+import { Routes, Route } from 'react-router-dom'
 
-function App() {
-
-
-  return (
+const App = () => {
+    return (        
     <>
-        <Routes>
-          <Route path="/" element={<Facts />} />
-        </Routes>
-
+      <Routes>
+        <Route path="/facts" element={<Facts />} />
+        <Route path="/facts/:id" element={<Fact />} />
+      </Routes>
     </>
-  )
-}
+    )
+};
 
-export default App
+export default App;
