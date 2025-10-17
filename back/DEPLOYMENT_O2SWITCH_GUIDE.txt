@@ -1,0 +1,199 @@
+===========================================
+    DÉPLOIEMENT API SUR O2SWITCH
+===========================================
+
+Guide complet pour déployer votre API Symfony avec SQLite sur O2Switch
+
+===========================================
+    PRÉPARATION LOCALE
+===========================================
+
+1. OPTIMISER POUR LA PRODUCTION
+   - Modifier .env.local pour la production
+   - Installer les dépendances de production
+   - Compiler les assets
+
+2. COMMANDES À EXÉCUTER LOCALEMENT:
+   composer install --no-dev --optimize-autoloader
+   php bin/console cache:clear --env=prod
+   php bin/console doctrine:schema:update --force --env=prod
+
+===========================================
+    CONFIGURATION ENVIRONNEMENT
+===========================================
+
+1. CRÉER UN FICHIER .env.prod.local:
+   APP_ENV=prod
+   APP_SECRET=votre-cle-secrete-production-tres-longue-et-complexe
+   DATABASE_URL="sqlite:///%kernel.project_dir%/var/data.db"
+
+2. CONFIGURER LE SERVEUR WEB:
+   - DocumentRoot doit pointer vers le dossier /public
+   - Activer mod_rewrite pour Apache
+   - Configurer les permissions
+
+===========================================
+    UPLOAD DES FICHIERS
+===========================================
+
+FICHIERS À UPLOADER (via FTP/SFTP):
+✅ /public/ (dossier complet)
+✅ /src/ (dossier complet)
+✅ /config/ (dossier complet)
+✅ /var/ (créer le dossier, permissions 755)
+✅ /vendor/ (dossier complet)
+✅ composer.json
+✅ composer.lock
+✅ symfony.lock
+✅ .env.prod.local (créer sur le serveur)
+
+FICHIERS À NE PAS UPLOADER:
+❌ .env (fichier de développement)
+❌ .env.local (fichier de développement)
+❌ /var/cache/ (sera recréé)
+❌ /var/log/ (sera recréé)
+❌ .git/ (si présent)
+❌ /tests/ (si présent)
+
+===========================================
+    CONFIGURATION SERVEUR O2SWITCH
+===========================================
+
+1. DOCUMENT ROOT:
+   Votre domaine doit pointer vers: /public
+   Exemple: /home/votrecompte/www/public/
+
+2. FICHIER .htaccess (déjà présent dans /public):
+   RewriteEngine On
+   RewriteCond %{REQUEST_FILENAME} !-f
+   RewriteRule ^(.*)$ index.php [QSA,L]
+
+3. PERMISSIONS:
+   - /var/ : 755 (lecture/écriture pour le serveur)
+   - /var/data.db : 644 (lecture/écriture pour le serveur)
+   - /public/ : 755
+
+===========================================
+    COMMANDES POST-DÉPLOIEMENT
+===========================================
+
+1. SE CONNECTER EN SSH (si disponible):
+   ssh votrecompte@votre-domaine.com
+
+2. NAVIGUER VERS LE DOSSIER:
+   cd /home/votrecompte/www/
+
+3. EXÉCUTER LES COMMANDES:
+   php bin/console cache:clear --env=prod
+   php bin/console doctrine:schema:update --force --env=prod
+   php bin/console app:load-facts --env=prod
+
+===========================================
+    CONFIGURATION ALTERNATIVE (SANS SSH)
+===========================================
+
+Si SSH n'est pas disponible, créer un script PHP temporaire:
+
+1. CRÉER init.php dans la racine:
+<?php
+require_once 'vendor/autoload.php';
+
+use Symfony\Component\Dotenv\Dotenv;
+use Symfony\Component\Console\Application;
+use App\Command\LoadFactsCommand;
+use Doctrine\ORM\EntityManagerInterface;
+
+$dotenv = new Dotenv();
+$dotenv->load('.env.prod.local');
+
+// Initialiser Symfony
+$kernel = new App\Kernel('prod', false);
+$kernel->boot();
+$container = $kernel->getContainer();
+
+// Charger les facts
+$em = $container->get('doctrine.orm.entity_manager');
+$command = new LoadFactsCommand($em);
+$command->run(new \Symfony\Component\Console\Input\ArrayInput([]), new \Symfony\Component\Console\Output\ConsoleOutput());
+
+echo "Initialisation terminée!";
+?>
+
+2. EXÉCUTER VIA NAVIGATEUR:
+   https://votre-domaine.com/init.php
+
+3. SUPPRIMER init.php après exécution
+
+===========================================
+    VÉRIFICATION DU DÉPLOIEMENT
+===========================================
+
+1. TESTER L'API:
+   GET https://votre-domaine.com/api/facts
+
+2. VÉRIFIER LA DOCUMENTATION:
+   https://votre-domaine.com/api/docs
+
+3. TESTER UNE CRÉATION:
+   POST https://votre-domaine.com/api/facts
+   Body: {"fact": "Test production", "techno": "Deploy"}
+
+===========================================
+    OPTIMISATIONS PRODUCTION
+===========================================
+
+1. CACHE:
+   - Le cache Symfony sera automatiquement optimisé
+   - SQLite sera plus rapide en lecture seule
+
+2. SÉCURITÉ:
+   - Changer APP_SECRET en production
+   - Vérifier les permissions des fichiers
+   - Activer HTTPS si possible
+
+3. MONITORING:
+   - Surveiller les logs dans /var/log/
+   - Monitorer l'espace disque pour SQLite
+
+===========================================
+    DÉPANNAGE COURANT
+===========================================
+
+ERREUR 500:
+- Vérifier les permissions /var/
+- Vérifier .env.prod.local
+- Consulter les logs /var/log/
+
+ERREUR 404:
+- Vérifier que DocumentRoot pointe vers /public
+- Vérifier .htaccess dans /public
+
+ERREUR BASE DE DONNÉES:
+- Vérifier les permissions /var/data.db
+- Vérifier DATABASE_URL dans .env.prod.local
+
+===========================================
+    URLS DE PRODUCTION
+===========================================
+
+API Base: https://votre-domaine.com/api/
+Documentation: https://votre-domaine.com/api/docs
+GraphQL: https://votre-domaine.com/api/graphql
+
+Routes disponibles:
+- GET /api/facts
+- POST /api/facts
+- GET /api/facts/{id}
+- PUT /api/facts/{id}
+- PATCH /api/facts/{id}
+- DELETE /api/facts/{id}
+
+===========================================
+    NOTES IMPORTANTES
+===========================================
+
+- SQLite fonctionne parfaitement sur O2Switch
+- Pas besoin de base de données MySQL
+- Le fichier data.db sera dans /var/
+- Sauvegardez régulièrement /var/data.db
+- O2Switch supporte PHP 8.2+ et Composer

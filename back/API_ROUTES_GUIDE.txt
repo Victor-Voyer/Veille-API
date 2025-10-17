@@ -1,0 +1,253 @@
+===========================================
+    GUIDE DES ROUTES API - VEILLE API
+===========================================
+
+Base URL: http://localhost:8000/api
+
+===========================================
+    ROUTES DISPONIBLES
+===========================================
+
+=== ROUTES CRUD PRINCIPALES (FactController) ===
+
+1. LISTER TOUTES LES FACTS (avec pagination)
+   GET /api/facts
+   
+2. RÉCUPÉRER UNE FACT SPÉCIFIQUE
+   GET /api/facts/{id}
+   
+3. CRÉER UNE NOUVELLE FACT
+   POST /api/facts
+   
+4. MODIFIER UNE FACT (REMPLACEMENT COMPLET)
+   PUT /api/facts/{id}
+   
+5. MODIFIER PARTIELLEMENT UNE FACT
+   PATCH /api/facts/{id}
+   
+6. SUPPRIMER UNE FACT
+   DELETE /api/facts/{id}
+
+7. STATISTIQUES DES FACTS
+   GET /api/facts/stats
+
+=== ROUTES D'EXEMPLE PÉDAGOGIQUES (ExampleController) ===
+
+8. ROUTE SIMPLE
+   GET /api/examples/hello
+   
+9. RECHERCHE AVANCÉE
+   GET /api/examples/search
+   
+10. LISTE DES TECHNOLOGIES
+    GET /api/examples/technologies
+    
+11. CRÉATION EN LOT
+    POST /api/examples/bulk-create
+    
+12. FACT ALÉATOIRE
+    GET /api/examples/random
+    
+13. SANTÉ DE L'API
+    GET /api/examples/health
+
+===========================================
+    CONFIGURATION POSTMAN
+===========================================
+
+BASE URL: http://localhost:8000/api
+
+Headers requis pour POST/PUT/PATCH:
+Content-Type: application/json
+
+===========================================
+    EXEMPLES POSTMAN
+===========================================
+
+1. LISTER TOUTES LES FACTS
+   Method: GET
+   URL: http://localhost:8000/api/facts
+   Headers: (aucun requis)
+   
+   Réponse attendue: Liste de toutes les facts avec pagination
+
+2. RÉCUPÉRER UNE FACT (exemple ID=1)
+   Method: GET
+   URL: http://localhost:8000/api/facts/1
+   Headers: (aucun requis)
+   
+   Réponse attendue: Détails de la fact avec ID=1
+
+3. CRÉER UNE NOUVELLE FACT
+   Method: POST
+   URL: http://localhost:8000/api/facts
+   Headers: 
+     Content-Type: application/json
+   
+   Body (raw JSON):
+   {
+     "fact": "Votre nouvelle fact ici",
+     "techno": "PHP"
+   }
+   
+   Réponse attendue: Fact créée avec ID généré automatiquement
+
+4. MODIFIER UNE FACT COMPLÈTEMENT (exemple ID=1)
+   Method: PUT
+   URL: http://localhost:8000/api/facts/1
+   Headers: 
+     Content-Type: application/json
+   
+   Body (raw JSON):
+   {
+     "fact": "Fact complètement modifiée",
+     "techno": "JavaScript"
+   }
+   
+   Réponse attendue: Fact mise à jour
+
+5. MODIFIER PARTIELLEMENT UNE FACT (exemple ID=1)
+   Method: PATCH
+   URL: http://localhost:8000/api/facts/1
+   Headers: 
+     Content-Type: application/json
+   
+   Body (raw JSON):
+   {
+     "techno": "React"
+   }
+   
+   Réponse attendue: Seul le champ "techno" est mis à jour
+
+6. SUPPRIMER UNE FACT (exemple ID=1)
+   Method: DELETE
+   URL: http://localhost:8000/api/facts/1
+   Headers: (aucun requis)
+   
+   Réponse attendue: Code 200 avec message de confirmation
+
+7. STATISTIQUES DES FACTS
+   Method: GET
+   URL: http://localhost:8000/api/facts/stats
+   Headers: (aucun requis)
+   
+   Réponse attendue: Statistiques complètes (total, par technologie, récentes)
+
+8. ROUTE SIMPLE D'EXEMPLE
+   Method: GET
+   URL: http://localhost:8000/api/examples/hello
+   Headers: (aucun requis)
+   
+   Réponse attendue: Message de bienvenue avec timestamp
+
+9. RECHERCHE AVANCÉE
+   Method: GET
+   URL: http://localhost:8000/api/examples/search?q=javascript&techno=PHP
+   Headers: (aucun requis)
+   
+   Réponse attendue: Facts contenant "javascript" ET techno="PHP"
+
+10. LISTE DES TECHNOLOGIES
+    Method: GET
+    URL: http://localhost:8000/api/examples/technologies
+    Headers: (aucun requis)
+    
+    Réponse attendue: Liste des technologies avec nombre de facts
+
+11. CRÉATION EN LOT
+    Method: POST
+    URL: http://localhost:8000/api/examples/bulk-create
+    Headers: Content-Type: application/json
+    
+    Body (raw JSON):
+    {
+      "facts": [
+        {"fact": "PHP 8.2 est sorti", "techno": "PHP"},
+        {"fact": "React 18 est disponible", "techno": "React"}
+      ]
+    }
+    
+    Réponse attendue: Liste des facts créées et erreurs éventuelles
+
+12. FACT ALÉATOIRE
+    Method: GET
+    URL: http://localhost:8000/api/examples/random?techno=PHP
+    Headers: (aucun requis)
+    
+    Réponse attendue: Une fact aléatoire (optionnellement filtrée par techno)
+
+13. SANTÉ DE L'API
+    Method: GET
+    URL: http://localhost:8000/api/examples/health
+    Headers: (aucun requis)
+    
+    Réponse attendue: Status de l'API, base de données, statistiques
+
+===========================================
+    FILTRES ET RECHERCHES
+===========================================
+
+FILTRER PAR TECHNOLOGIE:
+GET http://localhost:8000/api/facts?techno=PHP
+
+PAGINATION (limiter les résultats):
+GET http://localhost:8000/api/facts?itemsPerPage=10
+
+PAGINATION AVEC OFFSET:
+GET http://localhost:8000/api/facts?page=2&itemsPerPage=10
+
+===========================================
+    EXEMPLES DE FACTS EXISTANTES
+===========================================
+
+ID 1: "Le premier programme informatique a été écrit par Ada Lovelace en 1843." (Histoire)
+ID 2: "Le terme 'bug' informatique vient d'un vrai insecte coincé dans un ordinateur en 1947." (Histoire)
+ID 3: "JavaScript a été créé en seulement 10 jours par Brendan Eich en 1995." (JavaScript)
+ID 4: "Le premier site web était info.cern.ch, créé par Tim Berners-Lee en 1991." (Web)
+ID 5: "Python doit son nom à Monty Python's Flying Circus, pas au serpent." (Python)
+
+... et 25 autres facts disponibles !
+
+===========================================
+    CODES DE RÉPONSE HTTP
+===========================================
+
+200 OK: Succès (GET, PUT, PATCH)
+201 Created: Ressource créée (POST)
+204 No Content: Succès sans contenu (DELETE)
+400 Bad Request: Données invalides
+404 Not Found: Ressource non trouvée
+422 Unprocessable Entity: Erreur de validation
+
+===========================================
+    INTERFACE WEB ALTERNATIVE
+===========================================
+
+Documentation interactive Swagger UI:
+http://localhost:8000/api/docs
+
+Interface GraphQL:
+http://localhost:8000/api/graphql
+
+===========================================
+    COMMANDES UTILES
+===========================================
+
+Voir toutes les facts en base:
+php bin/console doctrine:query:sql "SELECT * FROM fact"
+
+Compter les facts:
+php bin/console doctrine:query:sql "SELECT COUNT(*) FROM fact"
+
+Recharger les facts de test:
+php bin/console app:load-facts
+
+===========================================
+    NOTES IMPORTANTES
+===========================================
+
+- Le champ "dateEnregistrement" est automatiquement rempli à la création
+- Le champ "id" est auto-incrémenté
+- Toutes les routes sont automatiquement générées par API Platform
+- L'API supporte JSON et XML
+- CORS est configuré pour permettre les requêtes cross-origin
