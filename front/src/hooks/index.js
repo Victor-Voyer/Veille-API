@@ -1,5 +1,5 @@
 export { useApi } from './useApi'
-export { useFact } from './useFact'
+export { useFact, useFactDelete } from './useFact'
 export { useFactEditor } from './useFactEditor'
 
 

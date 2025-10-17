@@ -3,11 +3,25 @@ import { Link } from 'react-router-dom'
 
 const FactCard = ({ fact }) => {
     if (!fact) return null
+    
     return (
-        <div>
-            <div>{fact.fact}</div>
-            {fact.techno && <small>Tech: {fact.techno}</small>}
-            {fact.id && <Link to={`/facts/${fact.id}`}>Voir</Link>}
+        <div className="card fact-card">
+            <div className="fact-content">
+                <p className="fact-text">{fact.fact}</p>
+                {fact.techno && (
+                    <div className="tech-badge">
+                        <span className="tech-label">Tech:</span>
+                        <span className="tech-value">{fact.techno}</span>
+                    </div>
+                )}
+            </div>
+            {fact.id && (
+                <div className="fact-actions">
+                    <Link to={`/facts/${fact.id}`} className="btn-link">
+                        Voir les détails
+                    </Link>
+                </div>
+            )}
         </div>
     )
 }
