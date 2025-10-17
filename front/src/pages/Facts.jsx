@@ -2,7 +2,7 @@ import React from 'react'
 import { useApi } from '../hooks'
 import FactCard from '../components/FactCard'
 
-const API_URL = 'http://localhost:8000/api/facts?_format=json'
+const API_URL = 'http://localhost:8000/api/facts'
 
 const Facts = () => {
     const { data, loading, error } = useApi(API_URL)
